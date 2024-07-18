@@ -34,7 +34,7 @@ public class MemberJpaRepository {
         return Optional.ofNullable(member);
     }
 
-    public long count() {
+    public long count(int age) {
         return em.createQuery("select count(m) from Member m", Long.class)
                 .getSingleResult();
     }
