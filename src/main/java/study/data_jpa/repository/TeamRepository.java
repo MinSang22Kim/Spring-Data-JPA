@@ -5,4 +5,5 @@ import study.data_jpa.entity.Member;
 
 public interface TeamRepository extends JpaRepository<Member, Long> {
 
+
 }
