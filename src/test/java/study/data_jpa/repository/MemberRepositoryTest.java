@@ -19,9 +19,12 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @Rollback(false)
 class MemberRepositoryTest {
 
-    @Autowired MemberRepository memberRepository;
-    @Autowired TeamRepository teamRepository;
-    @Autowired EntityManager em;
+    @Autowired
+    MemberRepository memberRepository;
+    @Autowired
+    TeamRepository teamRepository;
+    @Autowired
+    EntityManager em;
 
     @Test
     public void testMember() {
@@ -50,6 +53,7 @@ class MemberRepositoryTest {
         assertThat(resultCount).isEqualTo(3);
     }
 
+    // 쿼리 힌트 테스트
     @Test
     public void queryHint() throws Exception {
 
@@ -65,8 +69,9 @@ class MemberRepositoryTest {
         em.flush(); // Update Query 실행X
     }
 
+    // 락 테스트
     @Test
-    public void lock(){
+    public void lock() {
 
         //given
         Member member = new Member("member1", 10);
@@ -76,5 +81,12 @@ class MemberRepositoryTest {
 
         //when
         List<Member> result = memberRepository.findLockByUsername("member1");
+    }
+
+    // 사용자 정의 레포 테스트
+    @Test
+    public void callCustom() {
+
+        List<Member> result = memberRepository.findMemberCustom();
     }
 }
