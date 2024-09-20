@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
@@ -141,21 +143,49 @@ class MemberRepositoryTest {
     }
 
     @Test
+    public void nativeQuery() throws Exception {
+
+        //given
+        Team teamA = new Team("teamA");
+        em.persist(teamA);
+
+        Member m1 = new Member("m1", 0, teamA);
+        Member m2 = new Member("m2", 0, teamA);
+
+        em.persist(m1);
+        em.persist(m2);
+
+        em.flush();
+        em.clear();
+
+        //when
+        Page<MemberProjection> result = memberRepository.findByNativeProjection(PageRequest.of(0, 10));
+        List<MemberProjection> content = result.getContent();
+
+        for(MemberProjection projection : content) {
+            System.out.println("memberProjection = " + projection.getUserName());
+            System.out.println("TeamProjection = " + projection.getTeamName());
+        }
+    }
+
+    @Test
     public void projections() throws Exception {
 
         //given
         Team teamA = new Team("teamA");
         em.persist(teamA);
+
         Member m1 = new Member("m1", 0, teamA);
         Member m2 = new Member("m2", 0, teamA);
+
         em.persist(m1);
         em.persist(m2);
+
         em.flush();
         em.clear();
 
         //when
-        List<UsernameOnlyDto> result =
-                memberRepository.findProjectionsByUsername("m1");
+        List<UsernameOnlyDto> result = memberRepository.findProjectionsByUsername("m1");
 
         //then
         Assertions.assertThat(result.size()).isEqualTo(1);
