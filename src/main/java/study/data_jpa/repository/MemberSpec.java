@@ -22,3 +22,4 @@ public class MemberSpec {
         return (Specification<Member>) (root, query, builder) ->
                 builder.equal(root.get("username"), username);
     }
+}
