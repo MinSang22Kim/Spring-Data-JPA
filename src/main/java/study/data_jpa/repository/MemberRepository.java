@@ -59,6 +59,10 @@ public interface MemberRepository extends JpaRepository<Member, Long>, MemberRep
 
     // Projections
     // 반환 타입에 UsernameOnly를 넣으면 인터페이스지만 구현체가 되어서 온다!
-//    List<UsernameOnly> findProjectionsByUsername(String username);
+    // List<UsernameOnly> findProjectionsByUsername(String username);
     List<UsernameOnlyDto> findProjectionsByUsername(String username);
+
+    // 네이티브 쿼리
+    @Query(value = "select * from member where username = ?", nativeQuery = true)
+    Member findByNativeQuery(String username);
 }
